@@ -14,6 +14,8 @@ import com.gabriel.helpdesk.repositories.TecnicoRepository;
 import com.gabriel.helpdesk.services.exceptions.DataIntegrityViolationException;
 import com.gabriel.helpdesk.services.exceptions.ObjectnotFoundException;
 
+import jakarta.validation.Valid;
+
 @Service
 public class TecnicoService {
 
@@ -38,6 +40,13 @@ public class TecnicoService {
         Tecnico newObj = new Tecnico(objDTO);
         return repository.save(newObj);
     }
+    
+    public Tecnico update(Integer id, @Valid TecnicoDTO objDTO) {
+		objDTO.setId(id);
+		Tecnico oldObj = findById(id);
+		oldObj = new Tecnico(objDTO);
+		return repository.save(oldObj);
+	}
 
     private void validaPorCpfEEmail(TecnicoDTO objDTO) { 
         Optional<Pessoa> obj = pessoaRepository.findByCpf(objDTO.getCpf());
@@ -50,4 +59,6 @@ public class TecnicoService {
             throw new DataIntegrityViolationException("Email já cadastrado no sistema.");
         }
     }
+
+	
 }
